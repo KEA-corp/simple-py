@@ -3,9 +3,36 @@ import kea
 print(kea.version)
 
 kea.start("""
-D off
-V var 40
-V var2 2
-C var var + var2
-A var
+S runing
+V i 1
+V 0 0
+V 0.5 0.5
+V 1 1
+V 2 2
+V 3 3
+V to 30000
+L nbr to
+    C i i + 1
+    C mod i % 2
+    V inpair 1
+    X done inpair
+        V good 1
+        C max i ^ 0.5
+        C max max - 1
+        V x 1
+        L all max
+            C x x + 1
+            C mod i % x
+            B bad mod == 0
+            X no bad
+                B good 0 == 1
+                Z 3
+                E no
+            E all
+        X prem good
+            A i
+            S
+            E prem
+        E done
+    E nbr
 """)

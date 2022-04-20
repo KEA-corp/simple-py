@@ -15,7 +15,7 @@
 --|~|--|~|--|~|--|~|--|~|--|~|--
 '''
 
-version = "0.0.3"
+version = "0.0.5"
 
 def debug_print(texte, blue = False):
     global DEBUG
@@ -24,8 +24,11 @@ def debug_print(texte, blue = False):
         else: print(texte)
 
 def setvar(name, valeur, active):
-    if type(valeur) == str and valeur.isdigit():
-        valeur = int(valeur)
+    if type(valeur) == str:
+        if valeur.isdigit():
+            valeur = int(valeur)
+        elif "." in valeur and valeur.replace(".", "").isdigit():
+            valeur = float(valeur)
     name = makename(name, active)
     debug_print(f"{name} → {valeur}\n")
     VAR[name] = valeur
@@ -169,7 +172,7 @@ def codeinloop(code, nom, max, fonc_name):  # sourcery no-metrics
     debug_print(f"DEMARAGE DE LA BOUCLE '{nom}'\n")
     sauter = setsauter("", nom)
     dobreak = 0
-    for rep in range(max):
+    for rep in range(int(max)):
         for i in range(len(code)):
             ligne = code[i]
             ligne = ligne.strip()
@@ -236,10 +239,10 @@ def codeinloop(code, nom, max, fonc_name):  # sourcery no-metrics
                         sauter = setsauter(args[1], nom)
                         debug_print(f"condition non remplie: {sauter}\n")
                 elif mode == "S":
-                    if args[1] == "":
-                        print("\n")
+                    if len(args) > 1:
+                        print(end = f"\033[0;0;33m{args[1].replace('_', ' ')}\033[0m")
                     else:
-                        print(f"\033[0;0;33m{args[1].replace('_', ' ')}\033[0m")
+                        print()
                     if DEBUG:
                         print("\n")
                 elif mode == "I":
