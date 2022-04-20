@@ -21,7 +21,7 @@ def debug_print(texte, blue = False):
     global DEBUG
     if DEBUG:
         if blue: print(end = f"\033[0;1;30m{texte}\033[0m")
-        else: print(texte)
+        else: print(end = texte)
 
 def setvar(name, valeur, active):
     if type(valeur) == str:
