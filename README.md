@@ -1,2 +1,1 @@
-# simple-py
-simple KEA interpreter in python3
+Documentation sur le KEA et KEA-stream sur [kea-corp.github.io](https://kea-corp.github.io)
