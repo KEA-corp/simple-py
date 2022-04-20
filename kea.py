@@ -15,19 +15,16 @@
 --|~|--|~|--|~|--|~|--|~|--|~|--
 '''
 
-version = "0.0.1"
+version = "0.0.3"
 
 def debug_print(texte, blue = False):
     global DEBUG
     if DEBUG:
-        if blue:
-            print(end = f"\033[0;1;30m{texte}\033[0m")
-        else:
-            print(texte)
-
+        if blue: print(end = f"\033[0;1;30m{texte}\033[0m")
+        else: print(texte)
 
 def setvar(name, valeur, active):
-    if valeur.isdigit():
+    if type(valeur) == str and valeur.isdigit():
         valeur = int(valeur)
     name = makename(name, active)
     debug_print(f"{name} → {valeur}\n")
@@ -39,11 +36,11 @@ def user_input(var, ACTIVE):
 
 
 def debug_print_all():
-    print("\nVARIABLES:\n")
+    print("\nVARIABLES:")
     global VAR
     for key, value in VAR.items():
         print(f"- {key} = {value}")
-    print("\nFONCTIONS:\n")
+    print("\nFONCTIONS:")
     global FUNCTIONS
     for key, value in FUNCTIONS.items():
         print(f"- {key} ~ i{value[1]}")
@@ -84,7 +81,7 @@ def calc(calcul, var1, var2):
     elif calcul == "%":
         return var1 % var2
     else:
-        print(f"Erreur de calcul : '{calcul}' \n")
+        print(f"Erreur de calcul : '{calcul}'")
 
 
 def makename(name, active):
@@ -94,7 +91,7 @@ def getvar(name, active):
     name = makename(name, active)
     if name in VAR:
         return VAR[name]
-    print(f"Variable {name} non trouvée\n")
+    print(f"Variable {name} non trouvée")
     return ""
 
 
@@ -121,7 +118,7 @@ def add_sharp(code):
             names.append(args[2])
     for k in range(len(to_add)):
         code = code + to_add[k].split("\n")
-        print(f"merge de '{names[k]}' avec succès!\n")
+        print(f"merge de '{names[k]}' avec succès!")
     return code
 
 
@@ -150,11 +147,11 @@ def start_fonction(args, fonc_name):
         for j in range(len(in_fonc_args)):
             if out_args[j] in VAR:
                 setvar(in_fonc_args[j], getvar(out_args[j], fonc_name), fonc_name)
-                debug_print(f"création de la variable '{in_fonc_args[j]}' = '{getvar(out_args[j], fonc_name)}' dans la fonction '{fonc_name}'\n")
+                debug_print(f"création de la variable '{in_fonc_args[j]}' = '{getvar(out_args[j], fonc_name)}' dans la fonction '{fonc_name}'")
             else:
-                print(f"Erreur: fonction '{fonc_name}' : argument {j} non défini\n")
+                print(f"Erreur: fonction '{fonc_name}' : argument {j} non défini")
         return bcl_ctrl(fonc_code, oldi, fonc_name, 1, fonc_name)[1]
-    print(f"Fonction {fonction} non trouvée\n")
+    print(f"Fonction {fonction} non trouvée")
 
 
 def save_fonction(name, code, i, args):
@@ -168,6 +165,7 @@ def bcl_ctrl(code, i, nom, nb, fonc_name):
 
 
 def codeinloop(code, nom, max, fonc_name):  # sourcery no-metrics
+    global VAR, DEBUG, FUNCTIONS
     debug_print(f"DEMARAGE DE LA BOUCLE '{nom}'\n")
     sauter = setsauter("", nom)
     dobreak = 0
@@ -241,15 +239,15 @@ def codeinloop(code, nom, max, fonc_name):  # sourcery no-metrics
                     if args[1] == "":
                         print("\n")
                     else:
-                        print(f"\e[0;0;33m{args[1].replace('_', ' ')}\e[0m")
+                        print(f"\033[0;0;33m{args[1].replace('_', ' ')}\033[0m")
                     if DEBUG:
                         print("\n")
                 elif mode == "I":
                     user_input(args[1], fonc_name)
                 elif mode == "A":
-                    print(f"\e[0;1;33m{getvar(args[1], fonc_name)}\e[0m")
+                    print(f"\033[0;1;33m{getvar(args[1], fonc_name)}\033[0m")
                     if DEBUG:
-                        print("\n")
+                        print()
                 elif mode != "//":
                     print(f"Erreur de mode: {mode}")
             else:
