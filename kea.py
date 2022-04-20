@@ -15,7 +15,7 @@
 --|~|--|~|--|~|--|~|--|~|--|~|--
 '''
 
-version = "0.0.5"
+version = "0.0.6"
 
 def debug_print(texte, blue = False):
     global DEBUG
@@ -185,15 +185,19 @@ def codeinloop(code, nom, max, fonc_name):  # sourcery no-metrics
             if sauter == "" or (mode == "E" and args[1] == sauter):
                 if sauter != "":
                     sauter = setsauter("", nom)
+                
                 if mode == "":
                     continue
+                
                 elif mode == "V":
                     var = args[1]
                     val = args[2]
                     setvar(var, val, fonc_name)
+                
                 elif mode == "L":
                     dobreak = bcl_ctrl(code, i, args[1], getvar(args[2], fonc_name), fonc_name)[0]
                     sauter = setsauter(args[1], nom)
+                
                 elif mode == "E":
                     if args[1] == nom:
                         debug_print(f"ARRET DE LA BOUCLE '{nom}'")
@@ -202,25 +206,32 @@ def codeinloop(code, nom, max, fonc_name):  # sourcery no-metrics
                             return [0, getvar(args[2], fonc_name)]
                         debug_print(" PAR BREAK\n")
                         break
+                
                 elif mode == "C":
                     result = calc(args[3], getvar(args[2], fonc_name), getvar(args[4], fonc_name))
                     setvar(args[1], result, fonc_name)
+                
                 elif mode == "Z":
                     dobreak = getvar(args[1], fonc_name) if len(args) > 1 else 1
+                
                 elif mode == "B":
                     setvar(args[1], compar(args[3], getvar(args[2], fonc_name), getvar(args[4], fonc_name)), fonc_name)
+                
                 elif mode == "H":
                     setvar(args[1], getvar(args[2], fonc_name), fonc_name)
+                
                 elif mode == "F":
                     fonc_args = []
                     if len(args) > 2:
                         fonc_args = args[2].split("&")
                     save_fonction(args[1], code, i, fonc_args)
                     sauter = setsauter(args[1], nom)
+                
                 elif mode == "T":
                     sortie = start_fonction(args, fonc_name)
                     if len(args) > 3:
                         setvar(args[3], sortie, fonc_name)
+                
                 elif mode == "D":
                     if args[1] == "on":
                         DEBUG = True
@@ -228,9 +239,11 @@ def codeinloop(code, nom, max, fonc_name):  # sourcery no-metrics
                         DEBUG = False
                     else:
                         debug_print_all()
+                
                 elif mode == "R":
                     rand = rand(0, getvar(args[2], fonc_name))
                     setvar(args[1], rand, fonc_name)
+                
                 elif mode == "X":
                     if getvar(args[2], fonc_name) == True:
                         dobreak = bcl_ctrl(code, i, args[1], 1, fonc_name)[0]
@@ -238,21 +251,20 @@ def codeinloop(code, nom, max, fonc_name):  # sourcery no-metrics
                     else:
                         sauter = setsauter(args[1], nom)
                         debug_print(f"condition non remplie: {sauter}\n")
+                
                 elif mode == "S":
-                    if len(args) > 1:
-                        print(end = f"\033[0;0;33m{args[1].replace('_', ' ')}\033[0m")
-                    else:
-                        print()
-                    if DEBUG:
-                        print("\n")
+                    print(end = f"\033[0;0;33m{args[1].replace('_', ' ')}\033[0m" if len(args) > 1 else "\n")
+                
                 elif mode == "I":
                     user_input(args[1], fonc_name)
+                
                 elif mode == "A":
-                    print(f"\033[0;1;33m{getvar(args[1], fonc_name)}\033[0m")
-                    if DEBUG:
-                        print()
+                    print(end = f"\033[0;1;33m{getvar(args[1], fonc_name)}\033[0m")
+                
                 elif mode != "//":
                     print(f"Erreur de mode: {mode}")
+                if DEBUG and mode in ["S", "A"]:
+                    print()
             else:
                 debug_print(f"{nom} → passer '{ligne}'")
             if dobreak > 0:
