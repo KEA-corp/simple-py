@@ -1,38 +1,24 @@
 import kea
-
-print(kea.version)
+from ks.decoupeur import Decoupeur
 
 kea.start("""
-S runing
-V i 1
-V 0 0
-V 0.5 0.5
-V 1 1
-V 2 2
-V 3 3
-V to 30000
-L nbr to
-    C i i + 1
-    C mod i % 2
-    V inpair 1
-    X done inpair
-        V good 1
-        C max i ^ 0.5
-        C max max - 1
-        V x 1
-        L all max
-            C x x + 1
-            C mod i % x
-            B bad mod == 0
-            X no bad
-                B good 0 == 1
-                Z 3
-                E no
-            E all
-        X prem good
-            A i
-            S
-            E prem
-        E done
-    E nbr
+D on
+
+F print var
+    A var
+    S
+    E print var
+
+V ext 42
+T print ext
 """)
+
+# while True:
+#     code = input("KS $ ")
+#     sortie = Decoupeur(code, 0).start()
+
+#     if sortie != 0:
+#         parsed = "\n".join([" ".join(k) for k in sortie])
+#         print(f"\n{parsed}\n")
+
+#         kea.start(parsed, 0)

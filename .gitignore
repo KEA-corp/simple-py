@@ -1,2 +1,4 @@
 # cache of python modules
 __pycache__/
+ks/
+test.py

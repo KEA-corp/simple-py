@@ -15,7 +15,7 @@
 --|~|--|~|--|~|--|~|--|~|--|~|--
 '''
 
-version = "0.0.6"
+version = "0.0.7"
 
 def debug_print(texte, blue = False):
     global DEBUG
@@ -125,11 +125,12 @@ def add_sharp(code):
     return code
 
 
-def start(code):
+def start(code, reset = True):
     global VAR, DEBUG, FUNCTIONS
-    DEBUG = False
-    VAR = {}
-    FUNCTIONS = {}
+    if reset:
+        DEBUG = False
+        VAR = {}
+        FUNCTIONS = {}
 
     code = str(code).replace(";", "\n").replace("\r", "")
     code = code.split("\n")
@@ -141,19 +142,26 @@ def start(code):
 
 def start_fonction(args, fonc_name):
     global FUNCTIONS
+
     fonction = args[1]
+
     if fonction in FUNCTIONS:
+
         fonc_code = FUNCTIONS[fonction][0]
         oldi = FUNCTIONS[fonction][1]
         in_fonc_args = FUNCTIONS[fonction][2]
+
         out_args = args[2].split("&") if len(args) > 2 else []
+
         for j in range(len(in_fonc_args)):
-            if out_args[j] in VAR:
-                setvar(in_fonc_args[j], getvar(out_args[j], fonc_name), fonc_name)
-                debug_print(f"création de la variable '{in_fonc_args[j]}' = '{getvar(out_args[j], fonc_name)}' dans la fonction '{fonc_name}'")
+            if len(out_args) > j:
+                setvar(in_fonc_args[j], getvar(out_args[j], fonc_name), args[1])
+                debug_print(f"création de la variable '{in_fonc_args[j]}' = '{getvar(out_args[j], fonc_name)}' dans la fonction '{args[1]}'")
             else:
-                print(f"Erreur: fonction '{fonc_name}' : argument {j} non défini")
-        return bcl_ctrl(fonc_code, oldi, fonc_name, 1, fonc_name)[1]
+                print(f"Erreur: fonction '{args[1]}' : argument {j} non défini")
+
+        return bcl_ctrl(fonc_code, oldi, args[1], 1, args[1])[1]
+
     print(f"Fonction {fonction} non trouvée")
 
 
